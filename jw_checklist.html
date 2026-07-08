@@ -1,0 +1,600 @@
+<title>嘉威網站 QA 測試情境清單</title>
+<style>
+  :root{
+    --paper:#F2F4F0;
+    --paper-raised:#FFFFFF;
+    --ink:#1C231F;
+    --ink-soft:#5B655E;
+    --line:#DBE1D8;
+    --front:#2E6F5C;
+    --front-tint:#E4EFE9;
+    --front-tint-strong:#CFE4D9;
+    --back:#3E4E80;
+    --back-tint:#E8EAF3;
+    --back-tint-strong:#D3D8ED;
+    --warn:#B5482E;
+    --warn-tint:#F6E5DF;
+    --font-display:"Noto Serif TC","Source Han Serif TC","Times New Woman",serif;
+    --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Segoe UI",sans-serif;
+    --font-mono:"Cascadia Code","JetBrains Mono",ui-monospace,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:15.5px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--front);}
+  ::selection{background:var(--front-tint-strong);}
+
+  .container{max-width:1240px;margin:0 auto;padding:0 1.75rem 6rem;}
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    background:linear-gradient(180deg,#1C231F 0%,#232C26 100%);
+    color:#F2F4F0;
+    padding:3.2rem 1.75rem 2.6rem;
+  }
+  .masthead-inner{max-width:1240px;margin:0 auto;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#9FB3A5;
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+  }
+  .eyebrow::before{content:"";width:1.6rem;height:1px;background:#4E5E52;}
+  h1.title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(1.9rem,3.4vw,2.7rem);
+    margin:.7rem 0 .5rem;
+    text-wrap:balance;
+    letter-spacing:.01em;
+  }
+  .subtitle{
+    color:#C4D0C7;
+    font-size:1rem;
+    max-width:640px;
+    margin:0 0 1.8rem;
+  }
+  .stat-row{display:flex;flex-wrap:wrap;gap:.9rem;}
+  .stat-tile{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:3px;
+    padding:.8rem 1.1rem;
+    min-width:150px;
+    flex:1 1 150px;
+  }
+  .stat-tile .num{
+    font-family:var(--font-mono);
+    font-variant-numeric:tabular-nums;
+    font-size:1.5rem;
+    font-weight:600;
+    line-height:1;
+  }
+  .stat-tile .label{font-size:.78rem;color:#AEBDB2;margin-top:.35rem;}
+  .stat-tile.front .num{color:#7FD2AE;}
+  .stat-tile.back .num{color:#9BAAF0;}
+  .stat-tile.risk .num{color:#F0A98A;}
+  .stat-tile .bar{
+    height:3px;background:rgba(255,255,255,.12);border-radius:2px;margin-top:.6rem;overflow:hidden;
+  }
+  .stat-tile .bar > span{display:block;height:100%;width:0%;background:currentColor;transition:width .4s ease;}
+  .stat-tile.front .bar > span{background:#7FD2AE;}
+  .stat-tile.back .bar > span{background:#9BAAF0;}
+
+  /* ---------- Layout ---------- */
+  .layout{display:flex;gap:2.6rem;margin-top:2.6rem;align-items:flex-start;}
+  nav.toc{
+    position:sticky;top:1.5rem;
+    width:220px;flex:none;
+    max-height:calc(100vh - 3rem);
+    overflow-y:auto;
+    padding-right:.5rem;
+  }
+  nav.toc .toc-group{margin-bottom:1.3rem;}
+  nav.toc .toc-domain{
+    font-family:var(--font-mono);
+    font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 .5rem;
+  }
+  nav.toc a{
+    display:block;
+    font-size:.86rem;
+    color:var(--ink);
+    text-decoration:none;
+    padding:.32rem 0 .32rem .7rem;
+    border-left:2px solid var(--line);
+    opacity:.75;
+  }
+  nav.toc a:hover{opacity:1;border-left-color:var(--front);}
+  nav.toc .toc-group.back a:hover{border-left-color:var(--back);}
+
+  main{flex:1;min-width:0;}
+
+  .domain-banner{
+    display:flex;align-items:center;gap:.8rem;
+    margin:3.4rem 0 1.6rem;
+    padding-bottom:.7rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .domain-banner:first-child{margin-top:0;}
+  .domain-banner .tag{
+    font-family:var(--font-mono);
+    font-size:.72rem;letter-spacing:.1em;
+    padding:.28rem .6rem;border-radius:2px;
+    color:#fff;
+  }
+  .domain-banner.front .tag{background:var(--front);}
+  .domain-banner.back .tag{background:var(--back);}
+  .domain-banner h2{
+    font-family:var(--font-display);
+    font-size:1.55rem;margin:0;font-weight:700;
+  }
+  .domain-banner p{margin:0 0 0 auto;color:var(--ink-soft);font-size:.85rem;max-width:340px;text-align:right;}
+
+  section.feature-section{margin-bottom:2.2rem;scroll-margin-top:1.5rem;}
+  .section-head{
+    display:flex;align-items:baseline;gap:.75rem;flex-wrap:wrap;
+    padding-left:.9rem;border-left:3px solid var(--line);
+    margin-bottom:.9rem;
+  }
+  .front .section-head{border-left-color:var(--front);}
+  .back .section-head{border-left-color:var(--back);}
+  .section-head h3{
+    font-family:var(--font-display);
+    font-size:1.15rem;margin:0;font-weight:700;
+  }
+  .section-head .count{
+    font-family:var(--font-mono);font-size:.75rem;color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
+  .file-tags{padding-left:.9rem;margin-bottom:.9rem;display:flex;flex-wrap:wrap;gap:.4rem;}
+  .file-tag{
+    font-family:var(--font-mono);font-size:.7rem;
+    background:var(--paper-raised);border:1px solid var(--line);
+    padding:.15rem .5rem;border-radius:2px;color:var(--ink-soft);
+  }
+
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:0;
+    margin-left:.9rem;
+    overflow:hidden;
+  }
+  .checklist{list-style:none;margin:0;padding:0;}
+  .checklist li{border-bottom:1px solid var(--line);}
+  .checklist li:last-child{border-bottom:none;}
+  .checklist label{
+    display:flex;gap:.7rem;align-items:flex-start;
+    padding:.62rem .9rem;cursor:pointer;
+    font-size:.9rem;
+  }
+  .checklist label:hover{background:var(--paper);}
+  .checklist input[type=checkbox]{
+    appearance:none;-webkit-appearance:none;
+    width:16px;height:16px;flex:none;margin-top:.15rem;
+    border:1.5px solid var(--ink-soft);border-radius:3px;
+    position:relative;cursor:pointer;
+  }
+  .front .checklist input[type=checkbox]:checked{background:var(--front);border-color:var(--front);}
+  .back .checklist input[type=checkbox]:checked{background:var(--back);border-color:var(--back);}
+  .checklist input[type=checkbox]:checked::after{
+    content:"";position:absolute;left:4px;top:0px;width:4px;height:8px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+  }
+  .checklist input[type=checkbox]:focus-visible{outline:2px solid var(--front);outline-offset:2px;}
+  .back .checklist input[type=checkbox]:focus-visible{outline-color:var(--back);}
+  .checklist span.txt{flex:1;}
+  .checklist label.checked span.txt{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--line);}
+  .kbd{font-family:var(--font-mono);font-size:.82em;background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:0 .3em;}
+
+  /* risk section */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.1rem;padding-right:.1rem;}
+  .card-grid > .card{margin-left:0;}
+  section.risk .card{border-color:#E3B7A6;}
+  section.risk .section-head{border-left-color:var(--warn);}
+  section.risk .checklist input[type=checkbox]:checked{background:var(--warn);border-color:var(--warn);}
+  section.risk .checklist input[type=checkbox]:focus-visible{outline-color:var(--warn);}
+  .risk-banner{
+    background:var(--warn-tint);border:1px solid #E3B7A6;color:#7A3620;
+    border-radius:4px;padding:.85rem 1.1rem;margin:0 .9rem 1rem;font-size:.85rem;
+  }
+
+  footer.notes{
+    margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
+    color:var(--ink-soft);font-size:.82rem;
+  }
+
+  @media (max-width:900px){
+    .layout{flex-direction:column;}
+    nav.toc{
+      position:static;width:100%;max-height:none;
+      display:flex;gap:1.4rem;overflow-x:auto;padding-bottom:.5rem;
+    }
+    nav.toc a{border-left:none;border-bottom:2px solid var(--line);padding:.3rem .1rem;white-space:nowrap;}
+    .domain-banner p{display:none;}
+    .card,.file-tags,.section-head{margin-left:0;padding-left:.7rem;}
+  }
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow">JW Index &middot; QA Test Plan</div>
+    <h1 class="title">嘉威網站測試情境清單</h1>
+    <p class="subtitle">依現行程式碼結構（app/views・actions・ajax 為前台，app/manage 為後台）整理之手動測試情境，供上線前逐項驗收。</p>
+    <div class="stat-row">
+      <div class="stat-tile front">
+        <div class="num" id="stat-front">–</div>
+        <div class="label">前台客戶操作情境</div>
+        <div class="bar"><span id="bar-front"></span></div>
+      </div>
+      <div class="stat-tile back">
+        <div class="num" id="stat-back">–</div>
+        <div class="label">後台員工操作情境</div>
+        <div class="bar"><span id="bar-back"></span></div>
+      </div>
+      <div class="stat-tile risk">
+        <div class="num" id="stat-risk">–</div>
+        <div class="label">資安風險待確認項目</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="layout">
+    <nav class="toc">
+      <div class="toc-group front">
+        <p class="toc-domain">前台 · 客戶</p>
+        <a href="#f-account">帳號與登入</a>
+        <a href="#f-member">會員專區</a>
+        <a href="#f-pedia">嘉威人大百科</a>
+        <a href="#f-news">報報 / 最新消息</a>
+        <a href="#f-course">嘉威人教室</a>
+        <a href="#f-about">服務 / 關於嘉威</a>
+        <a href="#f-career">徵才 / 聯絡我們</a>
+        <a href="#f-search">全站搜尋 / 例外</a>
+      </div>
+      <div class="toc-group back">
+        <p class="toc-domain">後台 · 員工</p>
+        <a href="#b-auth">登入與權限</a>
+        <a href="#b-home">首頁內容管理</a>
+        <a href="#b-course">嘉威人教室管理</a>
+        <a href="#b-news">報報 / 消息管理</a>
+        <a href="#b-about">服務 / 關於嘉威管理</a>
+        <a href="#b-pedia">嘉威人（大百科）管理</a>
+        <a href="#b-member">會員專區後台</a>
+        <a href="#b-career">職缺 / 聯絡嘉威</a>
+        <a href="#b-common">共用機制</a>
+        <a href="#b-risk">高風險除錯工具</a>
+      </div>
+    </nav>
+
+    <main>
+      <!-- ============ 前台 ============ -->
+      <div class="domain-banner front">
+        <span class="tag">前台</span>
+        <h2>客戶操作情境</h2>
+        <p>views／actions／ajax，訪客與登入會員的瀏覽、互動、表單流程</p>
+      </div>
+
+      <section class="feature-section front" id="f-account">
+        <div class="section-head"><h3>帳號與登入</h3><span class="count" data-count></span></div>
+        <div class="file-tags">
+          <span class="file-tag">register_action.php</span><span class="file-tag">login_action.php</span>
+          <span class="file-tag">forgot-password_action.php</span><span class="file-tag">get-activation-code_action.php</span>
+          <span class="file-tag">reset-password_action.php</span>
+        </div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">姓名欄位輸入英文／數字／符號 → 前端 <span class="kbd">pattern</span> 僅允許中文，應被擋下</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">統編／身分證欄位輸入非「8碼數字」或「1英文+9碼數字」格式 → 前端擋下</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">輸入格式正確但身分證檢查碼錯誤的身分證字號 → 後端檢查碼演算法應拒絕註冊</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">以已註冊過的 Email 重複註冊 → 提示 Email 已註冊</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">帳號欄輸入中文或特殊符號 → 前端僅允許英數字擋下；輸入已存在帳號 → 後端提示重複</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">密碼少於 8 碼 → 前端擋下；密碼超過 12 碼（頁面僅提示未加 maxlength）→ 實測後端是否真的限制長度</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">兩次密碼輸入不一致 → 顯示「兩次密碼輸入不一致」</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">未勾選服務條款直接送出 → 應被 required 擋下</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">電子報訂閱 checkbox 預設勾選：分別測試「維持預設」與「主動取消勾選」，確認 subscribed／important_information／course_information／other_information 四欄寫入值正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">以統編白名單內的公司統編註冊 → 應自動歸類為企業 VIP 會員（level=1）並導向對應完成頁</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">阻擋 Cloudflare Turnstile 驗證（如停用 JS）→ 顯示「機器人驗證失敗」並阻擋送出</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">登入：帳號不存在 → 導向註冊頁並顯示「查無帳號」</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">登入：密碼錯誤 → 顯示「密碼錯誤！」；圖形驗證碼錯誤 → 留在登入頁顯示「驗證碼錯誤！」</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">使用舊系統 MD5 密碼帳號登入 → 應登入成功，並確認密碼已靜默升級為 RC4 格式（可查 DB 比對前後值）</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">會員狀態為待審核（verify_status≠1）登入 → 導向輸入啟用驗證碼頁；測試驗證碼錯誤／逾時／重新寄送</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">忘記密碼／忘記帳號流程：Email 收到重設連結，測試連結時效與重複使用是否失效</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">首次登入（first_login=0）導向「我的課程」；非首次登入導向「個人資料」頁，資料補齊後旗標是否更新</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-member">
+        <div class="section-head"><h3>會員專區（登入後）</h3><span class="count" data-count></span></div>
+        <div class="file-tags">
+          <span class="file-tag">mem_profile_action.php</span><span class="file-tag">update_mem_subscription_api.php</span>
+          <span class="file-tag">mem_mycourse_action.php</span><span class="file-tag">mem_bookmark_action.php</span>
+        </div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">個人資料頁修改姓名／電話／統編等欄位並儲存，確認 API 正確回寫並即時反映於畫面</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">修改密碼：舊密碼輸入錯誤應拒絕；新密碼與確認欄不一致應提示</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">會員中心切換電子報各項訂閱開關，重新整理頁面後狀態是否保留</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">我的課程列表與報名詳情頁資料一致；新課程推薦列表可正常跳轉單一課程頁</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">收藏的課程／收藏的文章：加入與移除後列表即時更新，不需重新登入</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">登出後直接以網址存取會員專區頁面 → 應被導回登入頁</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-pedia">
+        <div class="section-head"><h3>嘉威人大百科</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">Jiawei-people_action.php</span><span class="file-tag">search_jpeople_action.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">依部門切換頁籤，各部門員工列表資料正確不串資料</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">點選單一員工顯示完整職稱／簡介等資料</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">大百科搜尋姓名／職稱關鍵字：有結果與查無結果（noResult 頁）兩種情境</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">未登入訪客瀏覽大百科是否可正常存取，確認是否有預期外的登入限制</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-news">
+        <div class="section-head"><h3>嘉威人報報 / 最新消息</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">article_action.php</span><span class="file-tag">oneArticle_action.php</span><span class="file-tag">oneNews_action.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">文章列表分類篩選與分頁功能正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">單篇文章內容顯示，含後台 CKEditor 產出的圖片／表格／連結是否正常渲染</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">文章搜尋關鍵字有結果／無結果情境</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">最新消息列表與單篇顯示；消息搜尋功能</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">於文章頁直接點擊收藏（書籤）按鈕，狀態同步回會員專區收藏列表</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-course">
+        <div class="section-head"><h3>嘉威人教室（課程）</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">course_action.php</span><span class="file-tag">course_sign_up_api.php</span><span class="file-tag">cancel_sign_api.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">課程列表依分類／授課型態篩選正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">影音課程頁播放器可正常載入與播放；非影音課程頁內容正確顯示</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">會員報名課程：重複報名同一堂課、已額滿課程報名時的提示訊息</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">未登入訪客嘗試報名課程的導引流程（應提示先登入）</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">取消報名後「我的課程」列表即時更新，並可重新報名</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">課程搜尋關鍵字功能</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-about">
+        <div class="section-head"><h3>服務項目 / 關於嘉威 / 團隊 / 據點</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">service_action.php</span><span class="file-tag">aboutus_action.php</span><span class="file-tag">apartment_action.php</span><span class="file-tag">team_action.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">服務項目列表與單一服務頁內容顯示；服務搜尋功能</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">關於嘉威（簡介／沿革／B型企業）頁面內容與輪播圖正常顯示</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">服務據點／分所地圖與聯絡資訊顯示正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">經營團隊列表與單一成員頁資料正確</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-career">
+        <div class="section-head"><h3>徵才 / 聯絡我們</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">jobs_action.php</span><span class="file-tag">contact_question_action.php</span><span class="file-tag">contact_detail_action.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">職缺列表與單一職缺詳情頁顯示正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">聯絡我們／職缺應徵表單：姓名、手機、訊息內容留空送出應被必填擋下</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">分所聯絡表單（contact_detail／contact_detail_q）與一般聯絡表單分流是否正確送達</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">法律聲明／隱私權政策頁可正常開啟</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section front" id="f-search">
+        <div class="section-head"><h3>全站搜尋 / 例外情境</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">search_action.php</span><span class="file-tag">NotFound_action.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">全站搜尋關鍵字，結果依分類（文章／消息／服務／課程）正確歸類</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">搜尋不到資料時導向 noResult 頁而非空白或錯誤頁</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">存取不存在的網址 → 正確顯示 404 頁</span></label></li>
+        </ul></div>
+      </section>
+
+      <!-- ============ 後台 ============ -->
+      <div class="domain-banner back">
+        <span class="tag">後台</span>
+        <h2>員工操作情境</h2>
+        <p>app/manage，管理端內容維運、會員管理、權限控管</p>
+      </div>
+
+      <section class="feature-section back" id="b-auth">
+        <div class="section-head"><h3>登入與權限</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">manage/index.php</span><span class="file-tag">login_ck.php</span><span class="file-tag">admin_group</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">正確帳密＋圖形驗證碼登入成功，導向後台首頁</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">圖形驗證碼輸入長度不足 4 碼或留空 → 前端阻擋送出</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">帳號欄輸入大寫英文或符號 → 確認自動轉小寫並過濾非英數字後的比對邊界情況</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">連續登入失敗 5 次 → 帳號自動停用（status=0），之後即使密碼正確也應無法登入</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">帳號已停用狀態嘗試登入 → 應被拒絕並給予明確訊息</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">每次登入（成功／失敗）皆寫入 admin_log，稽核資料型態與內容正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">非 admin_group_id=1 帳號直接以網址存取未授權模組 → 應被導向「非法登入！」並強制登出</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">admin_group_id=1（最高權限）帳號可存取所有模組，不受 permission 陣列限制</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">個人密碼修改：舊密碼錯誤、新密碼與確認欄不一致的提示情境</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">登出後使用瀏覽器上一頁，是否仍可看到後台頁面內容（Session 是否確實失效）</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-home">
+        <div class="section-head"><h3>首頁內容管理</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">banner/</span><span class="file-tag">fast_entry/</span><span class="file-tag">home_news/</span><span class="file-tag">locations_banner/</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">首頁 Banner 新增／編輯／刪除／拖曳排序，前台首頁同步更新</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">快速入口管理 CRUD 與排序</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">首頁各區塊（報報／教室／服務／最新消息／服務據點）勾選顯示與否，前台是否同步</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">事務所環境輪播圖 CRUD 與圖片顯示順序</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-course">
+        <div class="section-head"><h3>嘉威人教室管理</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">lesson/</span><span class="file-tag">lesson_category/</span><span class="file-tag">lesson_classroom/</span><span class="file-tag">lesson_setting/</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">課程新增／編輯／刪除，必填欄位與影音／非影音類型切換正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">課程類別／項目管理 CRUD，刪除已被課程使用的分類時的行為</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">授課型態管理與推薦課程設定是否正確反映於前台列表排序</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">課程整體設定（lesson_setting）與累積成就簡介編輯儲存後前台同步</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-news">
+        <div class="section-head"><h3>嘉威人報報 / 最新消息管理</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">jiaweipaper/</span><span class="file-tag">news/</span><span class="file-tag">ck5Upload.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">文章新增／編輯：CKEditor 插入圖片／表格／連結，確認上傳成功且前台正確顯示</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">文章分類／興趣分類／TAG 管理 CRUD，刪除使用中分類的行為</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">最新消息新增／編輯／分類管理與 Banner 管理</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">已發布文章／消息在前台是否即時反映（留意是否有快取延遲）</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-about">
+        <div class="section-head"><h3>服務 / 關於嘉威管理</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">service_page/</span><span class="file-tag">aboutus/</span><span class="file-tag">locations/</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">服務主頁／服務項目 CRUD 並反映於前台服務列表</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">關於嘉威簡介與輪播圖編輯儲存正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">業界貢獻／媒體報導／里程碑管理 CRUD</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">服務據點管理，含地址／地圖座標欄位儲存後前台地圖是否正確定位</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-pedia">
+        <div class="section-head"><h3>嘉威人（大百科）管理</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">jiawei_pedia_editor/</span><span class="file-tag">jiawei_pedia_verify/</span><span class="file-tag">manage_team/</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">大百科編輯（editor）：員工資料新增／編輯，含照片上傳格式與大小限制</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">大百科審查（verify）流程：送審 → 審核通過／退回，確認退回後 editor 草稿是否保留可修改</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">審核通過後，正式資料表與前台大百科顯示內容一致，草稿與正式版本不互相污染</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">經營團隊（manage_team）資料維護與職稱分類，前台團隊頁同步更新</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-member">
+        <div class="section-head"><h3>會員專區後台</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">member/form.php</span><span class="file-tag">tax_id/</span><span class="file-tag">subscription/</span><span class="file-tag">member_log/</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">新增會員：表單無訂閱電子報欄位，但實測 DB 內 subscribed 欄位是否被後端強制寫入為 1</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">編輯既有會員資料儲存後，確認不會意外覆蓋既有訂閱狀態（表單欄位已移除）</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">會員歷程紀錄（member_log）是否忠實記錄各項異動</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">電子報訂閱名單（subscription）篩選條件與匯出檔案內容正確</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">統編白名單（tax_id）新增統編後，前台以該統編註冊的會員是否正確歸類為 VIP</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">行業別管理 CRUD；後台觸發「寄送忘記密碼信」功能是否確實送達</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-career">
+        <div class="section-head"><h3>職缺 / 聯絡嘉威</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">opening/</span><span class="file-tag">faq/</span><span class="file-tag">contact/</span><span class="file-tag">site_contact/</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">職缺一覽 CRUD 與上架／下架狀態是否即時反映前台職缺列表</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">職缺 FAQ 管理 CRUD</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">聯絡表單詢問單列表與問題類型分類管理是否正確歸類</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">客服聯絡資訊設定變更後前台聯絡我們頁同步顯示</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back" id="b-common">
+        <div class="section-head"><h3>共用機制</h3><span class="count" data-count></span></div>
+        <div class="file-tags"><span class="file-tag">Upload_File.php</span><span class="file-tag">manage_ajax_save_sort.php</span><span class="file-tag">manage_ajax_save_del.php</span></div>
+        <div class="card"><ul class="checklist">
+          <li><label><input type="checkbox"><span class="txt">上傳非圖片檔並將副檔名改為 .jpg → getimagesize() 檢查應擋下偽造檔案</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">上傳超過 2MB 的圖片 → 顯示「上傳檔案容量超過限制」</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">編輯資料點擊「刪除檔案」後又取消 → 欄位 disable／enable 狀態應正確還原</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">共用列表拖曳排序後重新整理，排序是否確實保留</span></label></li>
+          <li><label><input type="checkbox"><span class="txt">共用刪除功能是否有二次確認，刪除後列表即時移除且資料庫確實刪除</span></label></li>
+        </ul></div>
+      </section>
+
+      <section class="feature-section back risk" id="b-risk">
+        <div class="section-head"><h3>高風險除錯工具（資安檢查重點）</h3><span class="count" data-count></span></div>
+        <div class="risk-banner">以下為開發除錯／一次性資料搬遷用檔案，非正式選單頁面。請確認正式環境是否已下架、加上登入保護或限制來源 IP。</div>
+        <div class="card-grid">
+          <div class="card"><ul class="checklist">
+            <li><label><input type="checkbox"><span class="txt"><span class="kbd">phpinfo.php</span> 是否可在正式站被任意存取，洩漏伺服器環境資訊</span></label></li>
+            <li><label><input type="checkbox"><span class="txt"><span class="kbd">test_jw_member.php</span> 的 ?member_import=1／?customer_import=1／?employee_import=1／?export=1 等參數，目前無登入保護，任何人皆可觸發資料匯入或匯出會員名單</span></label></li>
+          </ul></div>
+          <div class="card"><ul class="checklist">
+            <li><label><input type="checkbox"><span class="txt"><span class="kbd">tinyfilemanager.php</span> 是否可被未授權存取，進而瀏覽／上傳／刪除伺服器檔案</span></label></li>
+            <li><label><input type="checkbox"><span class="txt"><span class="kbd">check.php／test.php／mail_test.php／upload_debug.php／cookie_ok.php</span> 是否對外開放，是否洩漏路徑或環境設定</span></label></li>
+          </ul></div>
+        </div>
+      </section>
+
+      <footer class="notes">
+        本清單依現有程式碼路徑（app/views、app/actions、app/ajax、app/manage）比對商業邏輯與表單驗證規則整理而成，供人工測試逐項勾選記錄；不含自動化測試腳本。勾選狀態僅保存於本機瀏覽器。
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.checklist input[type=checkbox]'));
+  boxes.forEach(function(b, i){ b.dataset.key = 'jw-qa-' + i; });
+
+  var STORE_KEY = 'jw-qa-checklist-v1';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) {}
+
+  function save(){
+    var state = {};
+    boxes.forEach(function(b){ state[b.dataset.key] = b.checked; });
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  function domainOf(el){
+    return el.closest('section.feature-section').classList.contains('back') ? 'back' : 'front';
+  }
+
+  function updateSectionCounts(){
+    document.querySelectorAll('section.feature-section').forEach(function(sec){
+      var list = sec.querySelectorAll('.checklist input[type=checkbox]');
+      var checked = Array.prototype.filter.call(list, function(b){ return b.checked; }).length;
+      var countEl = sec.querySelector('[data-count]');
+      if (countEl) countEl.textContent = checked + ' / ' + list.length;
+    });
+  }
+
+  function updateHeaderStats(){
+    var frontBoxes = boxes.filter(function(b){ return domainOf(b) === 'front'; });
+    var backBoxes = boxes.filter(function(b){ return domainOf(b) === 'back' && !b.closest('section').classList.contains('risk'); });
+    var riskBoxes = boxes.filter(function(b){ return b.closest('section').classList.contains('risk'); });
+
+    var frontChecked = frontBoxes.filter(function(b){ return b.checked; }).length;
+    var backChecked = backBoxes.filter(function(b){ return b.checked; }).length;
+    var riskChecked = riskBoxes.filter(function(b){ return b.checked; }).length;
+
+    document.getElementById('stat-front').textContent = frontChecked + ' / ' + frontBoxes.length;
+    document.getElementById('stat-back').textContent = backChecked + ' / ' + backBoxes.length;
+    document.getElementById('stat-risk').textContent = riskChecked + ' / ' + riskBoxes.length;
+    document.getElementById('bar-front').style.width = (frontBoxes.length ? (frontChecked/frontBoxes.length*100) : 0) + '%';
+    document.getElementById('bar-back').style.width = (backBoxes.length ? (backChecked/backBoxes.length*100) : 0) + '%';
+  }
+
+  function refreshAll(){ updateSectionCounts(); updateHeaderStats(); }
+
+  boxes.forEach(function(b){
+    if (saved[b.dataset.key]) b.checked = true;
+    b.closest('label').classList.toggle('checked', b.checked);
+    b.addEventListener('change', function(){
+      b.closest('label').classList.toggle('checked', b.checked);
+      save();
+      refreshAll();
+    });
+  });
+
+  refreshAll();
+})();
+</script>
